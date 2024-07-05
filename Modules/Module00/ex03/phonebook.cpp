@@ -23,7 +23,7 @@ void PhoneBook::search(){
 
     while (1) {
         std::cout << "\n[Page " << currentPage << "]\n";
-        showPage(currentPage);
+        int totalIndex = showPage(currentPage);
 
         std::cout << "[Command] 'n' : next page, 'p' : previous page, 'q' : quit search, '0-9' : details\n";
         std::cin >> commandInput;
@@ -37,13 +37,33 @@ void PhoneBook::search(){
             --currentPage;
         } else if (!command.compare("q")) {
             break;
-        } else if (isSingleValidNumber(commandInput)) {
+        } else if (isSingleValidNumber(commandInput, totalIndex)) {
             // when command is index 0~9
             // index를 선택해 세부 정보를 볼 수 있어야 한다.
             // 유저가 북마크를 원한다면 북마크를 해야 한다.
 
-            int index = std::stoi(commandInput) + currentPage * 10;
+            int index = std::stoi(commandInput) + (currentPage - 1) * 10;
 
+            std::cout << "index : " << index << std::endl;
+
+            auto it = phonebook.begin();
+            std::advance(it, index);
+
+            std::cout << "-------------------------------\n";
+            std::cout << "Name : " << it->second.name << std::endl;
+            std::cout << "Phone Number : " << it->first << std::endl;
+            std::cout << "Nickname : " << it->second.nickname << std::endl;
+            std::cout << "-------------------------------\n";
+            std::cout << "'b' : bookmark , 'q' : quit\n";
+
+            std::cin >> commandInput;
+            command = QString::fromStdString(commandInput).toLower();
+            if (command == "q")
+                continue;
+            else if (command == "b") {
+                // todo 북마크 구현
+
+            }
         }
         else {
             std::cout << "Invalid command.\n";
@@ -60,17 +80,20 @@ void PhoneBook::bookmarkList(){
 }
 
 
-bool PhoneBook::isSingleValidNumber(std::string command) {
-    // todo 예외처리하세요 만약 마지막페이지라 숫자 3개만 있으면 0~2여야함.
-    if (std::all_of(command.begin(), command.end(), ::isdigit) && command.length() == 1)
+bool PhoneBook::isSingleValidNumber(std::string command, int totalIndex) {
+    std::cout << "res: " << std::stoi(command) << ", " << totalIndex << std::endl;
+    if (std::all_of(command.begin(), command.end(), ::isdigit)
+        && command.length() == 1
+        && std::stoi(command) <= totalIndex )
         return true;
     else
         return false;
 }
 
 
-void PhoneBook::showPage(int pageNum) {
+int PhoneBook::showPage(int pageNum) {
 
+    int total;
     int indexPerPage = 10;
     int startIdx = (pageNum - 1) * indexPerPage;
 
@@ -82,11 +105,16 @@ void PhoneBook::showPage(int pageNum) {
 
     auto it = phonebook.begin();
     std::advance(it, startIdx);
+
     for (int i = 0; i < indexPerPage && it != phonebook.end(); ++i, ++it) {
 
         std::cout << std::setw(10) << std::right << i;
         std::cout << " | ";
         std::cout << std::setw(10) << std::right << it->second.name << std::endl;
+
+        total = i;
     }
     std::cout << "-------------------------------\n";
+
+    return total;
 }

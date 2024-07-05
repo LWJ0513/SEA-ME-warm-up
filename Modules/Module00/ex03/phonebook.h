@@ -11,8 +11,8 @@ class PhoneBook
 private:
     std::map<std::string, Information> phonebook;
 
-    void showPage(int pageNum);
-    bool isSingleValidNumber(std::string);
+    int showPage(int pageNum);
+    bool isSingleValidNumber(std::string, int);
 
 public:
 

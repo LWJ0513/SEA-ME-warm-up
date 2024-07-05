@@ -71,12 +71,12 @@ int main(int argc, char **argv)
 
     while(1) {
 
+        std::cout << "-------------------------------\n";
         std::cout << "[COMMAND] ADD, SEARCH, REMOVE, BOOKMARK, EXIT\n";
         std::cout << "Enter the command : ";
         std::cin >> input;
 
         QString qstr = QString::fromStdString(input).toUpper();
-
 
 
         if (!qstr.compare("ADD")) {
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         } else if (!qstr.compare("EXIT")) {
             return 0;
         } else {
-            std::cout << "Enter the correct command. \n";
+            std::cout << ">> Enter the correct command. <<\n";
             continue;
         }
     }
