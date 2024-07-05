@@ -1,5 +1,8 @@
 .DS_Store
 
+build
+CMakeLists.txt.user
+
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
