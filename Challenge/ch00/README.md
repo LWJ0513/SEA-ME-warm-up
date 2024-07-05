@@ -33,9 +33,59 @@ Output: [8,9,9,9,0,0,0,1]
 
 <br>
 
----
 ## Constraints:
 
 The number of nodes in each linked list is in the range [1, 100].
 0 <= Node.val <= 9
 It is guaranteed that the list represents a number that does not have leading zeros.
+
+<br>
+
+---
+
+# Solution Code
+```
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+
+        bool ten = false;
+        ListNode* result = nullptr, *current;
+
+
+        while (l1 != nullptr || l2 != nullptr) {
+
+            int n1 = (l1 == nullptr) ? 0 : l1->val;
+            int n2 = (l2 == nullptr) ? 0 : l2->val;
+
+            int sum = n1 + n2;
+            if (ten && (l1 != nullptr || l2 != nullptr)){
+                ++sum;
+                ten = false;
+            }
+            int num = sum >= 10 ? sum - 10 : sum;
+            ten = sum >= 10;
+
+            if (result == nullptr) {
+                result = new ListNode(num);
+                current = result;
+            } else {
+                current->next = new ListNode(num);
+                current = current->next;
+            }
+
+            if (l1 != nullptr)
+                l1 = l1->next;
+            if (l2 != nullptr)
+                l2 = l2->next;
+        }
+
+        if (ten)
+            current->next = new ListNode(1);
+
+        return result;
+    }
+};
+
+```
