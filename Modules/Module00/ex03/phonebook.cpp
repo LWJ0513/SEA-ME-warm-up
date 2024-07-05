@@ -29,18 +29,13 @@ void PhoneBook::search(){
         std::cin >> commandInput;
         QString command = QString::fromStdString(commandInput).toLower();
 
-        // todo 엔터 눌렀을 때?
-
-        if (!command.compare("n") && currentPage < totalPages) {
+        if (command == "n" && currentPage < totalPages) {
             ++currentPage;
-        } else if (!command.compare("p") && currentPage > 1) {
+        } else if (command == "p" && currentPage > 1) {
             --currentPage;
-        } else if (!command.compare("q")) {
+        } else if (command == "q") {
             break;
         } else if (isSingleValidNumber(commandInput, totalIndex)) {
-            // when command is index 0~9
-            // index를 선택해 세부 정보를 볼 수 있어야 한다.
-            // 유저가 북마크를 원한다면 북마크를 해야 한다.
 
             int index = std::stoi(commandInput) + (currentPage - 1) * 10;
 
