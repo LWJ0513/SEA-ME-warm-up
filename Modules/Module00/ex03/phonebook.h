@@ -10,13 +10,13 @@ class PhoneBook
 {
 private:
     std::map<std::string, Information> phonebook;
+    std::map<std::string, Information> bookmarks;
 
     int showPage(int pageNum);
     bool isSingleValidNumber(std::string, int);
+    void saveToBookmark(std::map<std::string, Information>::iterator);
 
 public:
-
-    // std::map<std::string, Information> phonebook;
     PhoneBook();
 
     void add(std::string name, std::string number, std::string nickname);

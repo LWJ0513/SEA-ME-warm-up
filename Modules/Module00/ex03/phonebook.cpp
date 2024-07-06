@@ -10,12 +10,7 @@ void PhoneBook::add(std::string name, std::string number, std::string nickname) 
     phonebook[number] = Information(name, number, nickname);
 }
 
-void PhoneBook::search(){
-    // index도 보여줘야 한다. 인덱스와 이름만 보여주기
-    // 10개씩만 보여주기
-    // [command] n -> next, p -> Previous, number -> index
-    // 유저가 북마크를 원한다면 북마크를 해야 한다.
-
+void PhoneBook::search() {
 
     int currentPage = 1;
     int totalPages = phonebook.size() / 10 + 1 ;
@@ -56,8 +51,8 @@ void PhoneBook::search(){
             if (command == "q")
                 continue;
             else if (command == "b") {
-                // todo 북마크 구현
-
+                saveToBookmark(it);
+                std::cout << "Bookmarked." << std::endl;
             }
         }
         else {
@@ -112,4 +107,9 @@ int PhoneBook::showPage(int pageNum) {
     std::cout << "-------------------------------\n";
 
     return total;
+}
+
+void PhoneBook::saveToBookmark(std::map<std::string, Information>::iterator it){
+
+    bookmarks[it->first] = it->second;
 }
