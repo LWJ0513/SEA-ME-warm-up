@@ -12,9 +12,13 @@ private:
     std::map<std::string, Information> phonebook;
     std::map<std::string, Information> bookmarks;
 
-    int showPage(int pageNum);
+    int showPhonebookPage(int pageNum);
+    int showBookmarkPage(int pageNum);
     bool isSingleValidNumber(std::string, int);
     void saveToBookmark(std::map<std::string, Information>::iterator);
+    bool removeTheNumber(std::string);
+    void removeByIndex(int, int);
+    void removeByNumber(int, int);
 
 public:
     PhoneBook();
@@ -23,7 +27,7 @@ public:
     void search();
     void remove();
     void bookmarkList();
-
+    bool isAllNumber(std::string);
 
 };
 #endif // PHONEBOOK_H

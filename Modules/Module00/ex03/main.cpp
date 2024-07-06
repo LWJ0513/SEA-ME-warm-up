@@ -42,7 +42,7 @@ void getAndAddInformation(PhoneBook *phonebook) {
         std::cin >> number;
 
         // check for numbers only
-        if (std::all_of(number.begin(), number.end(), ::isdigit))
+        if (phonebook->isAllNumber(number))
             break;
     }
 
@@ -53,7 +53,6 @@ void getAndAddInformation(PhoneBook *phonebook) {
     // get nickname
     std::cout << "** enter the nickname **\nnickname : ";
     std::cin >> nickname;
-
 
     phonebook->add(name, number, nickname);
 
@@ -90,12 +89,11 @@ int main(int argc, char **argv)
 
         } else if (!qstr.compare("REMOVE")) {
             std::cout << "REMOVE!\n";
-            // index 또는 폰번호를 통해 연락처를 지울 수 있다.
+            phonebook.remove();
 
         } else if (!qstr.compare("BOOKMARK")) {
             std::cout << "BOOKMARK!\n";
-            // 북마크된 연락처들을 보여줘야 한다.
-            // 북마크 해제
+            phonebook.bookmarkList();
 
         } else if (!qstr.compare("EXIT")) {
             return 0;
