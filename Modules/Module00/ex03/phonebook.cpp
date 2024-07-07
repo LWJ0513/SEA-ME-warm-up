@@ -71,9 +71,9 @@ void PhoneBook::remove(){
         std::cout << "\n[Page " << currentPage << "]\n";
         int totalIndex = showPhonebookPage(currentPage);
 
-        std::cout << "If you want to enter a index to remove, enter 'idx'\n"
-                     "If you want to enter a phone number to remove, enter 'num'\n"
-                     "'n' : next page, 'p' : previous page, 'q' : quit"
+        std::cout << "If you want to enter a \"index\" to remove, enter 'idx'\n"
+                     "If you want to enter a \"phone number\" to remove, enter 'num'\n"
+                     "'n' : next page, 'p' : previous page, 'q' : quit\n"
                      "[Command] : ";
         std::cin >> commandInput;
         QString command = QString::fromStdString(commandInput).toLower();
@@ -101,7 +101,6 @@ void PhoneBook::bookmarkList(){
     int currentPage = 1;
     int totalPages = bookmarks.size() / 10 + 1 ;
     std::string commandInput;
-
     while (1) {
         std::cout << "\n[Page " << currentPage << "]\n";
         int totalIndex = showBookmarkPage(currentPage);
@@ -109,7 +108,6 @@ void PhoneBook::bookmarkList(){
         std::cout << "[Command] 'n' : next page, 'p' : previous page, 'q' : quit bookmark, '0-9' : details\n";
         std::cin >> commandInput;
         QString command = QString::fromStdString(commandInput).toLower();
-
         if (command == "n" && currentPage < totalPages) {
             ++currentPage;
         } else if (command == "p" && currentPage > 1) {
@@ -117,9 +115,9 @@ void PhoneBook::bookmarkList(){
         } else if (command == "q") {
             break;
         } else if (isSingleValidNumber(commandInput, totalIndex)) {
-
             int index = std::stoi(commandInput) + (currentPage - 1) * 10;
 
+            std::cout << "-------------------------------\n";
             std::cout << "index : " << index << std::endl;
 
             auto it = bookmarks.begin();
@@ -140,12 +138,10 @@ void PhoneBook::bookmarkList(){
                 bookmarks.erase(it->first);
                 std::cout << "Delete a number from a bookmark." << std::endl;
             }
-        }
-        else {
+        } else {
             std::cout << "Invalid command.\n";
         }
     }
-
 }
 
 bool PhoneBook::isAllNumber(std::string command){
@@ -155,11 +151,10 @@ bool PhoneBook::isAllNumber(std::string command){
 }
 
 bool PhoneBook::isSingleValidNumber(std::string command, int totalIndex) {
-    std::cout << "res: " << std::stoi(command) << ", " << totalIndex << std::endl;
 
     if (isAllNumber(command)
             && command.length() == 1
-            && std::stoi(command) <= totalIndex )
+            && std::stoi(command) <= totalIndex)
         return true;
     else
         return false;
@@ -168,7 +163,7 @@ bool PhoneBook::isSingleValidNumber(std::string command, int totalIndex) {
 
 int PhoneBook::showPhonebookPage(int pageNum) {
 
-    int total;
+    int total = -1;
     int indexPerPage = 10;
     int startIdx = (pageNum - 1) * indexPerPage;
 
@@ -196,7 +191,7 @@ int PhoneBook::showPhonebookPage(int pageNum) {
 
 int PhoneBook::showBookmarkPage(int pageNum) {
 
-    int total;
+    int total = -1;
     int indexPerPage = 10;
     int startIdx = (pageNum - 1) * indexPerPage;
 

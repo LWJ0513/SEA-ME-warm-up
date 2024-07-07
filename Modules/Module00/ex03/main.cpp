@@ -1,6 +1,6 @@
 #include <iostream>
 #include <QString>
-#include <map>
+// #include <map>
 #include "phonebook.h"
 #include <algorithm>
 #include <string>
@@ -65,8 +65,6 @@ int main(int argc, char **argv)
     std::string input;
 
     PhoneBook phonebook;
-    // std::map<std::string, names> phonebook;
-    // std::map<std::string, bool> bookmark;
 
     while(1) {
 
