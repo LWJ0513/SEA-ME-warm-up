@@ -14,6 +14,10 @@ Car::Car(std::string make, std::string model, int year) : make(make), model(mode
 Car::Car(const Car &other)
 {
 	std::cout << "Car class Copy constructor called" << std::endl;
+
+	make = other.make;
+	model = other.model;
+	year = other.year;
 }
 
 Car &Car::operator=(const Car &other)
