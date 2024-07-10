@@ -2,6 +2,7 @@
 #define INFORMATION_HPP
 
 #include <string>
+#include <QString>
 
 class Information
 {
@@ -19,7 +20,7 @@ public:
     std::string getNickname();
 
     Information();
-    Information(std::string, std::string, std::string);
+    Information(QString, QString, QString);
 };
 
 #endif // INFORMATION_HPP
