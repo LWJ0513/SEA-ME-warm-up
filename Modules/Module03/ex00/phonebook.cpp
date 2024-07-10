@@ -4,6 +4,12 @@
 
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QDebug>
+#include <QSortFilterProxyModel>
+
+QString name = "Name";
+QString number = "Number";
+QString nickname = "Nickname";
 
 
 PhoneBook::PhoneBook(QWidget *parent)
@@ -13,9 +19,12 @@ PhoneBook::PhoneBook(QWidget *parent)
 {
     ui->setupUi(this);
 
-    model->setHorizontalHeaderLabels(QStringList() << "Name" << "Phone Number" << "Nickname");
+    ui->comboBox->addItem(name);
+    ui->comboBox->addItem(number);
+    ui->comboBox->addItem(nickname);
+    ui->comboBox->setCurrentIndex(1);
 
-    // QTableView에 모델 설정
+    model->setHorizontalHeaderLabels(QStringList() << name << number << nickname);
     ui->tableView->setModel(model);
 }
 
@@ -31,32 +40,137 @@ void PhoneBook::on_addButton_clicked()
     QString nickname = ui->nicknameInput->text();
 
     if (name.isEmpty() || number.isEmpty() || nickname.isEmpty()) {
-        // 메시지 박스에 경고 표시
+
         QMessageBox::warning(this, "Input Error", "All fields must be filled!");
     } else {
+
+        if (phonebook.find(number) != phonebook.end()) {
+            QMessageBox::warning(this, "Duplicate", "Number already exists!");
+            return;
+        }
+        addToPhonebook(name, number, nickname);
+
         ui->nameInput->clear();
         ui->numberInput->clear();
         ui->nicknameInput->clear();
 
-        if (phonebook.find(number) != phonebook.end()) {
-            QMessageBox::warning(this, "Duplicate", "Name already exists!");
-            return;
-        }
-        addToPhonebook(name, number, nickname);
         populateTableView();
-
-
     }
+}
+
+void PhoneBook::on_bookmarkButton_clicked()
+{
+}
+
+void PhoneBook::on_removeButton_clicked()
+{
+    // get selected row
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedIndexes();
+
+    if (selectedIndexes.isEmpty()) {
+        QMessageBox::warning(this, "Selection Error", "No item selected!");
+        return;
+    }
+
+    // 첫 번째 선택된 인덱스 가져오기
+    QModelIndex selectedProxyIndex = selectedIndexes.at(0);
+
+    // check is proxyModel QSortFilterProxyModel?
+    QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->tableView->model());
+    if (proxyModel) {
+
+        // 선택된 인덱스를 원본 모델의 인덱스로 변환
+        QModelIndex selectedSourceIndex = proxyModel->mapToSource(selectedProxyIndex);
+
+        // 원본 모델의 해당 행과 열에서 데이터 가져오기
+        QString number = model->item(selectedSourceIndex.row(), 1)->text();
+
+        removeFromPhonebook(number);
+    } else {
+
+        QString number = ui->tableView->model()->data(selectedProxyIndex).toString();
+
+        removeFromPhonebook(number);
+    }
+
+    populateTableView();
+}
+
+void PhoneBook::on_clearButton_clicked()
+{
+    ui->nameInput->clear();
+    ui->numberInput->clear();
+    ui->nicknameInput->clear();
+}
+
+void PhoneBook::on_searchButton_clicked()
+{
+    QString input = ui->searchInput->text();
+    QString col = ui->comboBox->currentText();
+    int colNum = -1;
+
+    if (col == name)
+        colNum = 0;
+    else if (col == number)
+        colNum = 1;
+    else if (col == nickname)
+        colNum = 2;
+    else
+        QMessageBox::warning(this, "Selection Error", "No box selected!");
+
+    qDebug() << colNum;
+    if (input.isEmpty())
+        populateTableView();
+    else
+        searchColumn(input, colNum);
 }
 
 void PhoneBook::addToPhonebook(const QString name, const QString number, const QString nickname)
 {
-    // 중복 체크
-    if (phonebook.find(name) != phonebook.end()) {
-        QMessageBox::warning(this, "Duplicate", "Name already exists!");
-        return;
-    }
+    phonebook[number] = Information(name, number, nickname);
+}
 
-    // 연락처 목록에 추가
-    phonebook[name] = Information(name, number, nickname);
+void PhoneBook::populateTableView()
+{
+    // model reset
+    model->removeRows(0, model->rowCount());
+
+    // set the table
+    int row = 0;
+    for (const auto &entry : phonebook) {
+
+        const QString number = entry.first;
+        Information info = entry.second;
+
+        QList<QStandardItem *> newRow;
+        newRow.append(new QStandardItem(info.getName()));
+        newRow.append(new QStandardItem(number));
+        newRow.append(new QStandardItem(info.getNickname()));
+
+        model->insertRow(row, newRow);
+        ++row;
+    }
+    ui->tableView->setModel(model);
+}
+
+void PhoneBook::removeFromPhonebook(const QString &number)
+{
+    auto it = phonebook.find(number);
+
+    if (it != phonebook.end())
+        phonebook.erase(it);
+}
+
+void PhoneBook::searchColumn(const QString searchText, int column) {
+
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+
+    proxyModel->setSourceModel(model);
+    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    proxyModel->setFilterKeyColumn(column);
+
+    QRegularExpression regExp(searchText, QRegularExpression::CaseInsensitiveOption);
+    proxyModel->setFilterRegularExpression(regExp);
+
+    ui->tableView->setModel(proxyModel);
 }

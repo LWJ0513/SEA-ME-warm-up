@@ -22,17 +22,26 @@ public:
     ~PhoneBook();
 
 private slots:
-
-    std::map<QString, Information> phonebook;
-    std::map<QString, Information> bookmarks;
-
+    void on_bookmarkButton_clicked();
     void on_addButton_clicked();
 
-    void addToPhonebook(const QString, const QString, const QString);
-    void populateTableView();   // QTableView에 연락처 목록을 표시하는 함수
+
+    void on_removeButton_clicked();
+
+    void on_clearButton_clicked();
+
+    void on_searchButton_clicked();
 
 private:
     Ui::PhoneBook *ui;
     QStandardItemModel *model;
+
+    std::map<QString, Information> phonebook;
+    std::map<QString, Information> bookmarks;
+
+    void removeFromPhonebook(const QString &name);
+    void addToPhonebook(const QString, const QString, const QString);
+    void populateTableView();   // QTableView에 연락처 목록을 표시하는 함수
+    void searchColumn(const QString, int);
 };
 #endif // PHONEBOOK_H

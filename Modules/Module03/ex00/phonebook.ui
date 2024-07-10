@@ -32,29 +32,6 @@
      <string>PhoneBook</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addButton">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>130</y>
-      <width>104</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ADD NUMBER</string>
-    </property>
-   </widget>
-   <widget class="QListView" name="listView">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>240</y>
-      <width>721</width>
-      <height>421</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -124,23 +101,26 @@
      </rect>
     </property>
    </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>220</y>
+      <width>731</width>
+      <height>461</height>
+     </rect>
+    </property>
+   </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>820</x>
       <y>350</y>
-      <width>106</width>
+      <width>136</width>
       <height>100</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="searchButton">
-       <property name="text">
-        <string>SEARCH</string>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QPushButton" name="bookmarkButton">
        <property name="text">
@@ -157,6 +137,76 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>270</y>
+      <width>217</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="searchInput"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="searchButton">
+       <property name="text">
+        <string>SEARCH</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>120</y>
+      <width>118</width>
+      <height>66</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="addButton">
+       <property name="text">
+        <string>ADD NUMBER</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clearButton">
+       <property name="text">
+        <string>CLEAR FIELD</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>230</y>
+      <width>222</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Find the contac via</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -164,7 +214,7 @@
      <x>0</x>
      <y>0</y>
      <width>1021</width>
-     <height>37</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

@@ -1,29 +1,38 @@
 #include "information.hpp"
+#include <QDebug>
 
 Information::Information() {}
 
-Information::Information(std::string name, std::string number, std::string nickname) : name(name), number(number), nickname(nickname) {}
+Information::Information(QString name, QString number, QString nickname) : name(name), number(number), nickname(nickname) {}
 
-void Information::setName(std::string name){
+void Information::setName(QString name){
     this->name = name;
 }
 
-void Information::setNumber(std::string number){
+void Information::setNumber(QString number){
     this->number = number;
 }
 
-void Information::setNickname(std::string number){
+void Information::setNickname(QString number){
     this->number = number;
 }
 
-std::string Information::getName(){
+const QString Information::getName(){
     return name;
 }
 
-std::string Information::getNumber(){
+const QString Information::getNumber(){
     return number;
 }
 
-std::string Information::getNickname(){
+const QString Information::getNickname(){
     return nickname;
+}
+
+void Information::printDebug() {
+
+    qDebug() << "name : " << name << "\n"
+             << "number : " << number << "\n"
+             << "nickname : " << nickname<< "\n";
+
 }
