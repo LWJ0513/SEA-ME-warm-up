@@ -9,8 +9,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileDialog>
-// #include <QMessageBox>
-
 
 QString name = "Name";
 QString number = "Number";
@@ -66,12 +64,12 @@ void PhoneBook::on_addButton_clicked()
     }
 }
 
-void PhoneBook::on_bookmarkButton_clicked()
-{
-}
-
 void PhoneBook::on_removeButton_clicked()
 {
+    // QString number = getSelectedNumber();
+    // if (number.isNull())
+    //     return;
+
     // get selected row
     QModelIndexList selectedIndexes = ui->searchTableView->selectionModel()->selectedIndexes();
 
@@ -101,6 +99,8 @@ void PhoneBook::on_removeButton_clicked()
         removeFromPhonebook(number);
     }
 
+
+    // removeFromPhonebook(number);
     populateTableView();
 }
 
@@ -264,4 +264,103 @@ void PhoneBook::on_LoadButton_clicked()
     } else
         QMessageBox::warning(this, "File Error", "Unable to open the file.");
 }
+
+void PhoneBook::hideEditWidget() {
+
+    ui->editNameLabel->hide();
+    ui->editNumberLabel->hide();
+    ui->editNicknameLabel->hide();
+
+    ui->editNameInput->hide();
+    ui->editNumberInput->hide();
+    ui->editNicknameInput->hide();
+
+    ui->saveEditButton->hide();
+}
+
+// void PhoneBook::showEditWidget() {
+
+//     ui->editNameLabel->show();
+//     ui->editNumberLabel->show();
+//     ui->editNicknameLabel->show();
+
+//     ui->editNameInput->show();
+//     ui->editNumberInput->show();
+//     ui->editNicknameInput->show();
+
+//     ui->saveEditButton->show();
+// }
+
+
+
+// void PhoneBook::on_editButton_clicked()
+// {
+    // ui->editButton->hide();
+    // showEditWidget();
+
+    // setTheEditNumberToWidget();
+// }
+
+// void PhoneBook::setTheEditNumberToWidget() {
+
+//     QString number = getSelectedNumber();
+//     if (number.isNull())
+//         return;
+
+//     // edit = number;
+
+//     auto it = phonebook.find(number);
+//     if (it != phonebook.end()) {
+//         ui->editNameInput->setText(it->second.getName());
+//         ui->editNumberInput->setText(number);
+//         ui->editNicknameInput->setText(it->second.getNickname());
+//     } else
+//         QMessageBox::warning(this, "Selection Error", "select err");
+
+// }
+
+// QString PhoneBook::getSelectedNumber() {
+
+    // // get selected row
+    // QModelIndexList selectedIndexes = ui->searchTableView->selectionModel()->selectedIndexes();
+
+    // if (selectedIndexes.isEmpty()) {
+    //     QMessageBox::warning(this, "Selection Error", "No item selected!");
+    //     return NULL;
+    // }
+
+    // // 첫 번째 선택된 인덱스 가져오기
+    // QModelIndex selectedProxyIndex = selectedIndexes.at(0);
+
+    // // check is proxyModel QSortFilterProxyModel?
+    // QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->searchTableView->model());
+
+    // // 선택된 인덱스를 원본 모델의 인덱스로 변환
+    // if (proxyModel)
+    //     selectedProxyIndex = proxyModel->mapToSource(selectedProxyIndex);
+
+    // // 원본 모델의 해당 행과 열에서 데이터 가져오기
+    // return model->item(selectedProxyIndex.row(), 1)->text();
+// }
+
+// void PhoneBook::on_saveEditButton_clicked()
+// {
+//     QString name = ui->editNameInput->text();
+//     QString number = ui->editNumberInput->text();
+//     QString nickname = ui->editNicknameInput->text();
+
+//     // auto it = phonebook.find(edit);
+
+//     // if (it != phonebook.end()) {
+//     //     if (it->first != number) {
+//     //         // 기존 번호와 입력된 번호가 다른 경우, 기존 항목을 삭제하고 새로운 항목 추가
+//     //         phonebook.erase(it); // 기존 항목 삭제
+//     //         addToPhonebook(name, number, nickname); // 새로운 항목 추가
+//     //     } else {
+//     //         // 같은 번호인 경우, 이름과 별명을 수정함
+//     //         it->second.setName(name); // 이름 수정
+//     //         it->second.setNickname(nickname); // 별명 수정
+//     //     }
+//     // }
+// }
 
