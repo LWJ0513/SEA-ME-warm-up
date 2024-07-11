@@ -25,12 +25,14 @@ private slots:
     void on_bookmarkButton_clicked();
     void on_addButton_clicked();
 
-
     void on_removeButton_clicked();
 
     void on_clearButton_clicked();
 
     void on_searchButton_clicked();
+
+    void on_SaveButton_clicked();
+    void on_LoadButton_clicked();
 
 private:
     Ui::PhoneBook *ui;

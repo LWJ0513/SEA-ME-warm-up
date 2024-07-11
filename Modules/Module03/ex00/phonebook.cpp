@@ -6,6 +6,11 @@
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QSortFilterProxyModel>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
+// #include <QMessageBox>
+
 
 QString name = "Name";
 QString number = "Number";
@@ -177,3 +182,86 @@ void PhoneBook::searchColumn(const QString searchText, int column) {
 
     ui->searchTableView->setModel(proxyModel);
 }
+
+void PhoneBook::on_SaveButton_clicked()
+{
+    // export to CSV
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as", "", "CSV Files (*.csv)");
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+
+        QTextStream stream(&file);
+
+        // input header
+        for (int i = 0; i < model->columnCount(); ++i) {
+
+            stream << model->headerData(i, Qt::Horizontal).toString();
+            if (i < model->columnCount() - 1)
+                stream << ",";
+        }
+        stream << "\n";
+
+        // input data
+        for (int i = 0; i < model->rowCount(); ++i) {
+            for (int j = 0; j < model->columnCount(); ++j) {
+                stream << model->data(model->index(i, j)).toString();
+                if (j < model->columnCount() - 1)
+                    stream << ",";
+            }
+            stream << "\n";
+        }
+
+        file.close();
+
+    } else
+        QMessageBox::warning(this, "File Error", "Unable to save the file.");
+}
+
+
+void PhoneBook::on_LoadButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Open CSV", "", "CSV Files (*.csv)");
+
+    if (fileName.isEmpty())
+        return;
+
+
+    QFile file(fileName);
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+
+        QTextStream stream(&file);
+
+        // reset model
+        model->removeRows(0, model->rowCount());
+
+        // read header
+        if (!stream.atEnd()) {
+
+            QString line = stream.readLine();
+            QStringList headers = line.split(",");
+            model->setHorizontalHeaderLabels(headers);
+        }
+
+        // read data
+        while (!stream.atEnd()) {
+
+            QString line = stream.readLine();
+            QStringList items = line.split(",");
+            QList<QStandardItem *> newRow;
+
+            for (const QString &item : items)
+                newRow.append(new QStandardItem(item));
+
+            model->appendRow(newRow);
+        }
+
+        file.close();
+
+    } else
+        QMessageBox::warning(this, "File Error", "Unable to open the file.");
+}
+
