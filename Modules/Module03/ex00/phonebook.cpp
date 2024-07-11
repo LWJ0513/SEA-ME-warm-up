@@ -25,7 +25,10 @@ PhoneBook::PhoneBook(QWidget *parent)
     ui->comboBox->setCurrentIndex(1);
 
     model->setHorizontalHeaderLabels(QStringList() << name << number << nickname);
-    ui->tableView->setModel(model);
+    ui->searchTableView->setModel(model);
+    ui->searchTableView->setCornerButtonEnabled(false);
+
+    hideEditWidget();
 }
 
 PhoneBook::~PhoneBook()
@@ -65,7 +68,7 @@ void PhoneBook::on_bookmarkButton_clicked()
 void PhoneBook::on_removeButton_clicked()
 {
     // get selected row
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedIndexes();
+    QModelIndexList selectedIndexes = ui->searchTableView->selectionModel()->selectedIndexes();
 
     if (selectedIndexes.isEmpty()) {
         QMessageBox::warning(this, "Selection Error", "No item selected!");
@@ -76,7 +79,7 @@ void PhoneBook::on_removeButton_clicked()
     QModelIndex selectedProxyIndex = selectedIndexes.at(0);
 
     // check is proxyModel QSortFilterProxyModel?
-    QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->tableView->model());
+    QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->searchTableView->model());
     if (proxyModel) {
 
         // 선택된 인덱스를 원본 모델의 인덱스로 변환
@@ -88,7 +91,7 @@ void PhoneBook::on_removeButton_clicked()
         removeFromPhonebook(number);
     } else {
 
-        QString number = ui->tableView->model()->data(selectedProxyIndex).toString();
+        QString number = ui->searchTableView->model()->data(selectedProxyIndex).toString();
 
         removeFromPhonebook(number);
     }
@@ -150,7 +153,7 @@ void PhoneBook::populateTableView()
         model->insertRow(row, newRow);
         ++row;
     }
-    ui->tableView->setModel(model);
+    ui->searchTableView->setModel(model);
 }
 
 void PhoneBook::removeFromPhonebook(const QString &number)
@@ -172,5 +175,5 @@ void PhoneBook::searchColumn(const QString searchText, int column) {
     QRegularExpression regExp(searchText, QRegularExpression::CaseInsensitiveOption);
     proxyModel->setFilterRegularExpression(regExp);
 
-    ui->tableView->setModel(proxyModel);
+    ui->searchTableView->setModel(proxyModel);
 }
