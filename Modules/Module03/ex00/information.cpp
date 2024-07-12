@@ -13,8 +13,8 @@ void Information::setNumber(QString number){
     this->number = number;
 }
 
-void Information::setNickname(QString number){
-    this->number = number;
+void Information::setNickname(QString nickname){
+    this->nickname = nickname;
 }
 
 const QString Information::getName(){
