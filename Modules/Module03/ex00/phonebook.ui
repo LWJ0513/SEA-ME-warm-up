@@ -296,7 +296,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>EDIT</string>
+     <string>SAVE</string>
     </property>
    </widget>
   </widget>

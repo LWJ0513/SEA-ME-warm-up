@@ -278,89 +278,103 @@ void PhoneBook::hideEditWidget() {
     ui->saveEditButton->hide();
 }
 
-// void PhoneBook::showEditWidget() {
+void PhoneBook::showEditWidget() {
 
-//     ui->editNameLabel->show();
-//     ui->editNumberLabel->show();
-//     ui->editNicknameLabel->show();
+    ui->editNameLabel->show();
+    ui->editNumberLabel->show();
+    ui->editNicknameLabel->show();
 
-//     ui->editNameInput->show();
-//     ui->editNumberInput->show();
-//     ui->editNicknameInput->show();
+    ui->editNameInput->show();
+    ui->editNumberInput->show();
+    ui->editNicknameInput->show();
 
-//     ui->saveEditButton->show();
-// }
+    ui->saveEditButton->show();
+}
 
 
 
-// void PhoneBook::on_editButton_clicked()
-// {
-    // ui->editButton->hide();
-    // showEditWidget();
+void PhoneBook::setTheEditNumberToWidget() {
 
-    // setTheEditNumberToWidget();
-// }
+    QString number = getSelectedNumber();
+    if (number.isNull())
+        return;
 
-// void PhoneBook::setTheEditNumberToWidget() {
+    auto it = phonebook.find(edit);
+    if (it != phonebook.end()) {
+        ui->editNameInput->setText(it->second.getName());
+        ui->editNumberInput->setText(edit);
+        ui->editNicknameInput->setText(it->second.getNickname());
+    } else
+        QMessageBox::warning(this, "Selection Error", "select err");
 
-//     QString number = getSelectedNumber();
-//     if (number.isNull())
-//         return;
+}
 
-//     // edit = number;
+QString PhoneBook::getSelectedNumber() {
 
-//     auto it = phonebook.find(number);
-//     if (it != phonebook.end()) {
-//         ui->editNameInput->setText(it->second.getName());
-//         ui->editNumberInput->setText(number);
-//         ui->editNicknameInput->setText(it->second.getNickname());
-//     } else
-//         QMessageBox::warning(this, "Selection Error", "select err");
+    // get selected row
+    QModelIndexList selectedIndexes = ui->searchTableView->selectionModel()->selectedIndexes();
 
-// }
+    if (selectedIndexes.isEmpty()) {
+        QMessageBox::warning(this, "Selection Error", "No item selected!");
+        return NULL;
+    }
 
-// QString PhoneBook::getSelectedNumber() {
+    // 첫 번째 선택된 인덱스 가져오기
+    QModelIndex selectedProxyIndex = selectedIndexes.at(0);
 
-    // // get selected row
-    // QModelIndexList selectedIndexes = ui->searchTableView->selectionModel()->selectedIndexes();
+    // check is proxyModel QSortFilterProxyModel?
+    QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->searchTableView->model());
 
-    // if (selectedIndexes.isEmpty()) {
-    //     QMessageBox::warning(this, "Selection Error", "No item selected!");
-    //     return NULL;
-    // }
+    // 선택된 인덱스를 원본 모델의 인덱스로 변환
+    if (proxyModel)
+        selectedProxyIndex = proxyModel->mapToSource(selectedProxyIndex);
 
-    // // 첫 번째 선택된 인덱스 가져오기
-    // QModelIndex selectedProxyIndex = selectedIndexes.at(0);
+    // 원본 모델의 해당 행과 열에서 데이터 가져오기
+    return model->item(selectedProxyIndex.row(), 1)->text();
+}
 
-    // // check is proxyModel QSortFilterProxyModel?
-    // QSortFilterProxyModel* proxyModel = qobject_cast<QSortFilterProxyModel*>(ui->searchTableView->model());
+void PhoneBook::on_saveEditButton_clicked()
+{
+    QString name = ui->editNameInput->text();
+    QString number = ui->editNumberInput->text();
+    QString nickname = ui->editNicknameInput->text();
 
-    // // 선택된 인덱스를 원본 모델의 인덱스로 변환
-    // if (proxyModel)
-    //     selectedProxyIndex = proxyModel->mapToSource(selectedProxyIndex);
+    auto it = phonebook.find(edit);
 
-    // // 원본 모델의 해당 행과 열에서 데이터 가져오기
-    // return model->item(selectedProxyIndex.row(), 1)->text();
-// }
+    if (it != phonebook.end()) {
+        qDebug() << it->first;
+        qDebug() <<  number;
 
-// void PhoneBook::on_saveEditButton_clicked()
-// {
-//     QString name = ui->editNameInput->text();
-//     QString number = ui->editNumberInput->text();
-//     QString nickname = ui->editNicknameInput->text();
+        if (it->first != number) {
+            // 기존 번호와 입력된 번호가 다른 경우, 기존 항목을 삭제하고 새로운 항목 추가
+            phonebook.erase(it); // 기존 항목 삭제
+            addToPhonebook(name, number, nickname); // 새로운 항목 추가
+        } else {
+            // 같은 번호인 경우, 이름과 별명을 수정함
+            qDebug()<< "요기";
+            it->second.setName(name); // 이름 수정
+            it->second.setNickname(nickname); // 별명 수정
+        }
+    }
 
-//     // auto it = phonebook.find(edit);
+    populateTableView();
+    hideEditWidget();
+    ui->editButton->show();
+}
 
-//     // if (it != phonebook.end()) {
-//     //     if (it->first != number) {
-//     //         // 기존 번호와 입력된 번호가 다른 경우, 기존 항목을 삭제하고 새로운 항목 추가
-//     //         phonebook.erase(it); // 기존 항목 삭제
-//     //         addToPhonebook(name, number, nickname); // 새로운 항목 추가
-//     //     } else {
-//     //         // 같은 번호인 경우, 이름과 별명을 수정함
-//     //         it->second.setName(name); // 이름 수정
-//     //         it->second.setNickname(nickname); // 별명 수정
-//     //     }
-//     // }
-// }
+
+void PhoneBook::on_editButton_clicked()
+{
+    QString number = getSelectedNumber();
+    if (number.isNull())
+        return;
+    edit = number;
+
+    qDebug() << number;
+
+    ui->editButton->hide();
+    showEditWidget();
+
+    setTheEditNumberToWidget();
+}
 
